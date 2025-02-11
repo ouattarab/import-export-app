@@ -1,6 +1,6 @@
 package com.example.app.controller;
 
-import com.example.app.model.User;
+import com.example.app.dto.UserDTO;
 import com.example.app.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +15,18 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserDTO>> getUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.createUser(user));
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @PostMapping("/saveAll")
+    public ResponseEntity<Void> saveAllUsers(@RequestBody List<UserDTO> users) {
+        userService.saveAllUsers(users);
+        return ResponseEntity.ok().build();
     }
 }
