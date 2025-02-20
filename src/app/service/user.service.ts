@@ -8,7 +8,8 @@ import { User } from '../models/user.model';
 })
 export class UserService {
   private apiUrl = 'http://localhost:3000/users'; // URL de l'API
-  private newUsersUrl = 'http://localhost:3000/newusers';
+  //private newUsersUrl = 'http://localhost:3000/newusers';
+  private newUsersUrl = 'http://localhost:8082/api/persons/batch';
 
   constructor(private http: HttpClient) { }
 
@@ -17,9 +18,18 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
-  saveUsers(users: User[]): Observable<User> {
-    return this.http.post<User>(this.newUsersUrl, users);
+ /* //saveUsers(users: User[]): Observable<User> {
+    saveUsers(users: User[]): Observable<User[]> {
+    const requestBody = { persons: users }; // Adapter la structure attendue par le backend
+   // return this.http.post<User>(this.newUsersUrl, users);
+    return this.http.post<User[]>(this.newUsersUrl, requestBody);
+  }*/
+
+  //saveUsers(data: { persons: User[] }): Observable<User[]> {
+    saveUsers(data: { persons: Pick<User, 'name' | 'city'>[] }): Observable<any> {
+    return this.http.post<User[]>(this.newUsersUrl, data);
   }
+  
 
   
   

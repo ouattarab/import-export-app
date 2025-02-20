@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../service/user.service';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { User } from '../models/user.model';
+
 
 @Component({
   selector: 'app-user-list',
@@ -37,15 +39,23 @@ export class UserListComponent implements OnInit {
   //save
   isLoading = false;
 
-saveAllUsers(): void {
+/*saveAllUsers(): void {
   if (this.users.length === 0) {
     alert("Aucune donnée à enregistrer !");
     return;
   }
 
   this.isLoading = true;
+   // Transformer les données pour ne garder que `name` et `city`
+   const filteredUsers = this.users.map(user => ({
+    name: user.name,
+    city: user.city
+  }));
 
-  this.userService.saveUsers(this.users).subscribe({
+  console.log('🔹 Données filtrées envoyées au backend :', filteredUsers);
+ // console.log('Transmi',this.users);
+ // this.userService.saveUsers(this.users).subscribe({
+    this.userService.saveUsers({persons: filteredUsers}).subscribe({
     next: () => {
       this.isLoading = false;
       alert("Les utilisateurs ont été enregistrés avec succès !");
@@ -56,19 +66,40 @@ saveAllUsers(): void {
       alert("Une erreur est survenue. Veuillez réessayer.");
     }
   });
-}
+} */
 
+  saveAllUsers(): void {
+    if (this.users.length === 0) {
+      alert("Aucune donnée à enregistrer !");
+      return;
+    }
   
+    this.isLoading = true;
+  
+    // Transformer les données pour ne garder que `name` et `city`
+    const filteredUsers = this.users.map(user => ({
+      name: user.name,
+      city: user.city
+    })) as Pick<User, 'name' | 'city'>[];
+  
+    console.log('🔹 Données filtrées envoyées au backend :', { persons: filteredUsers });
+  
+    // ✅ Envoi correct avec `{ persons: filteredUsers }`
+    this.userService.saveUsers({ persons: filteredUsers }).subscribe({
+      next: () => {
+        this.isLoading = false;
+        alert("Les utilisateurs ont été enregistrés avec succès !");
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error("Erreur lors de l'enregistrement :", err);
+        alert("Une erreur est survenue. Veuillez réessayer.");
+      }
+    });
+  }
+  
+  
+   
 
-  // Exporter les utilisateurs en CSV
- /* exportCSV(): void {
-    const csv = this.userService.exportUsersToCSV(this.users);
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'users.csv';
-    a.click();
-    window.URL.revokeObjectURL(url);
-  }*/
+ 
 }
