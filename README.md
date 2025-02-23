@@ -30,3 +30,37 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 npm install papaparse
 npm install -g json-server
 
+
+## PS merge
+
+CREATE OR REPLACE PROCEDURE MERGE_EMPLOYEES (p_result OUT SYS_REFCURSOR) IS
+BEGIN
+    -- Fusionner les données de EMPLOYEE vers EMPLOYEECOPY
+    MERGE INTO EMPLOYEECOPY EC
+    USING EMPLOYEE E
+    ON (EC.EMPLOYEE_ID = E.EMPLOYEE_ID)
+    WHEN MATCHED THEN
+        UPDATE SET 
+            EC.FIRST_NAME   = E.FIRST_NAME,
+            EC.LAST_NAME    = E.LAST_NAME,
+            EC.EMAIL        = E.EMAIL,
+            EC.PHONE_NUMBER = E.PHONE_NUMBER,
+            EC.HIRE_DATE    = E.HIRE_DATE,
+            EC.JOB_ID       = E.JOB_ID,
+            EC.SALARY       = E.SALARY;
+    
+    COMMIT;
+
+    -- Retourner le message de succès dans un curseur
+    OPEN p_result FOR
+    SELECT '1 Effectué avec succès' AS MESSAGE FROM DUAL;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        -- En cas d'erreur, on retourne un message d'échec
+        ROLLBACK;
+        OPEN p_result FOR
+        SELECT '0 Échec : ' || SQLERRM AS MESSAGE FROM DUAL;
+END MERGE_EMPLOYEES;
+/
+

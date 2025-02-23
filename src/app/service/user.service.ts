@@ -18,15 +18,8 @@ export class UserService {
     return this.http.get<User[]>(this.apiUrl);
   }
 
- /* //saveUsers(users: User[]): Observable<User> {
-    saveUsers(users: User[]): Observable<User[]> {
-    const requestBody = { persons: users }; // Adapter la structure attendue par le backend
-   // return this.http.post<User>(this.newUsersUrl, users);
-    return this.http.post<User[]>(this.newUsersUrl, requestBody);
-  }*/
 
-  //saveUsers(data: { persons: User[] }): Observable<User[]> {
-    saveUsers(data: { persons: Pick<User, 'name' | 'city'>[] }): Observable<any> {
+    saveUsers(data: { persons: Pick<User, 'name' | 'city' | 'phone'>[] }): Observable<any> {
     return this.http.post<User[]>(this.newUsersUrl, data);
   }
   

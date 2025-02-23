@@ -19,7 +19,8 @@ export class UserListComponent implements OnInit {
     { prop: 'name', name: 'Nom' },
     { prop: 'email', name: 'Email' },
     { prop: 'age', name: 'Âge' },
-    { prop: 'city', name: 'Ville' }
+    { prop: 'city', name: 'Ville' },
+    { prop: 'phone', name:'Telephone'}
   ];
 
   constructor(private userService: UserService) { }
@@ -79,8 +80,9 @@ export class UserListComponent implements OnInit {
     // Transformer les données pour ne garder que `name` et `city`
     const filteredUsers = this.users.map(user => ({
       name: user.name,
-      city: user.city
-    })) as Pick<User, 'name' | 'city'>[];
+      city: user.city,
+      phone: user.phone,
+    })) as Pick<User, 'name' | 'city' | 'phone'>[];
   
     console.log('🔹 Données filtrées envoyées au backend :', { persons: filteredUsers });
   
@@ -96,7 +98,7 @@ export class UserListComponent implements OnInit {
         alert("Une erreur est survenue. Veuillez réessayer.");
       }
     });
-  }
+  } 
   
   
    
