@@ -1,3 +1,7 @@
+<!-- Bouton pour importer un fichier CSV -->
+<input type="file" (change)="importCSV($event)" accept=".csv" class="form-control mb-2">
+
+<!-- Table ngx-datatable -->
 <ngx-datatable
   class="bootstrap"
   [rows]="users"
@@ -7,11 +11,10 @@
   [footerHeight]="50"
   rowHeight="auto"
   [count]="users.length"
-  [limit]="5">
+  [limit]="100">
 </ngx-datatable>
 
-
+<!-- Bouton pour sauvegarder -->
 <button (click)="saveAllUsers()" class="btn btn-primary" [disabled]="isLoading">
   {{ isLoading ? 'Enregistrement...' : 'Valider' }}
 </button>
-
