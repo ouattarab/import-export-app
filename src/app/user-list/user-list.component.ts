@@ -65,17 +65,21 @@ getUsers(): void {
   
     this.isLoading = true;
   
-    // Transformer les données pour ne garder que `name` et `city`
+    // 🔹 Définir les variables supplémentaires
+    const variable1 = "Valeur1"; // Remplace par la vraie valeur
+    const variable2 = "Valeur2"; // Remplace par la vraie valeur
+  
+    // Transformer les données pour ne garder que `name`, `city` et `phoneNumber`
     const filteredUsers = this.users.map(user => ({
       name: user.name,
       city: user.city,
       phoneNumber: user.phoneNumber,
     })) as Pick<User, 'name' | 'city' | 'phoneNumber'>[];
   
-    console.log('🔹 Données filtrées envoyées au backend :', { persons: filteredUsers });
+    console.log('🔹 Données filtrées envoyées au backend :', { persons: filteredUsers, variable1, variable2 });
   
-    // ✅ Envoi correct avec `{ persons: filteredUsers }`
-    this.userService.saveUsers({ persons: filteredUsers }).subscribe({
+    // ✅ Envoi correct avec `{ persons, variable1, variable2 }`
+    this.userService.saveUsers({ persons: filteredUsers, variable1, variable2 }).subscribe({
       next: () => {
         this.isLoading = false;
         alert("Les utilisateurs ont été enregistrés avec succès !");
@@ -86,7 +90,8 @@ getUsers(): void {
         alert("Une erreur est survenue. Veuillez réessayer.");
       }
     });
-  } 
+  }
+  
 
   /**
    * 🔹 Fonction pour importer un fichier CSV et extraire les `phoneNumber`

@@ -20,9 +20,10 @@ export class UserService {
   }
 
 
-    saveUsers(data: { persons: Pick<User, 'name' | 'city' | 'phoneNumber'>[] }): Observable<any> {
+  saveUsers(data: { persons: Pick<User, 'name' | 'city' | 'phoneNumber'>[], variable1: string, variable2: string }): Observable<any> {
     return this.http.post<User[]>(this.newUsersUrl, data);
   }
+  
   
   saveImport(data: { persons: Pick<User, 'phoneNumber'>[] }): Observable<any> {
     return this.http.post<User[]>(this.newUsersUrl, data);
