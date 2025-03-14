@@ -1,66 +1,58 @@
-# ImportExportApp
+#Vérifie la classe Person
+#Assure-toi que les attributs et les méthodes setSomeField et setAnotherField existent bien.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.3.
+#Exemple de classe correcte :
 
-## Development server
+@Entity
+public class Person {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
-
-## dependance 
-npm install papaparse
-npm install -g json-server
-
-
-## PS merge
-
-CREATE OR REPLACE PROCEDURE MERGE_EMPLOYEES (p_result OUT SYS_REFCURSOR) IS
-BEGIN
-    -- Fusionner les données de EMPLOYEE vers EMPLOYEECOPY
-    MERGE INTO EMPLOYEECOPY EC
-    USING EMPLOYEE E
-    ON (EC.EMPLOYEE_ID = E.EMPLOYEE_ID)
-    WHEN MATCHED THEN
-        UPDATE SET 
-            EC.FIRST_NAME   = E.FIRST_NAME,
-            EC.LAST_NAME    = E.LAST_NAME,
-            EC.EMAIL        = E.EMAIL,
-            EC.PHONE_NUMBER = E.PHONE_NUMBER,
-            EC.HIRE_DATE    = E.HIRE_DATE,
-            EC.JOB_ID       = E.JOB_ID,
-            EC.SALARY       = E.SALARY;
+    private String name;
+    private String city;
+    private String phoneNumber;
+    private Long sequence;
     
-    COMMIT;
+    private String variable1;  // Ajout des champs
+    private String variable2;
 
-    -- Retourner le message de succès dans un curseur
-    OPEN p_result FOR
-    SELECT '1 Effectué avec succès' AS MESSAGE FROM DUAL;
+    // Getters et setters
+    public void setVariable1(String variable1) {
+        this.variable1 = variable1;
+    }
 
-EXCEPTION
-    WHEN OTHERS THEN
-        -- En cas d'erreur, on retourne un message d'échec
-        ROLLBACK;
-        OPEN p_result FOR
-        SELECT '0 Échec : ' || SQLERRM AS MESSAGE FROM DUAL;
-END MERGE_EMPLOYEES;
-/
+    public void setVariable2(String variable2) {
+        this.variable2 = variable2;
+    }
+}
 
+#Remplace setSomeField et setAnotherField par les bons setters :
+#Dans ta méthode de service, remplace :
+#person.setVariable1(variable1);
+#person.setVariable2(variable2);
+#Par les bons setters qui existent dans Person.
+
+#Vérifie ton PersonRequestDTO :
+#Si variable1 et variable2 doivent être envoyés du front, assure-toi qu’ils existent bien dans #PersonRequestDTO :
+public class PersonRequestDTO {
+    private List<PersonDTO> persons;
+    private String variable1;
+    private String variable2;
+}
+#Si nécessaire, modifie mapToEntity :
+#Si la méthode mapToEntity est utilisée pour convertir PersonDTO en Person, assure-toi qu’elle #prend en compte variable1 et variable2 :
+public Person mapToEntity(PersonDTO dto, String variable1, String variable2) {
+    Person person = new Person();
+    person.setName(dto.getName());
+    person.setCity(dto.getCity());
+    person.setPhoneNumber(dto.getPhoneNumber());
+    person.setVariable1(variable1);
+    person.setVariable2(variable2);
+    return person;
+}
+
+#Et adapte l'appel dans ton service :
+List<Person> personsToSave = personRequestDTO.getPersons().stream()
+        .map(dto -> mapToEntity(dto, personRequestDTO.getVariable1(), personRequestDTO.getVariable2()))
+        .collect(Collectors.toList());
