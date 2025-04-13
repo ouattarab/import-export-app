@@ -97,3 +97,5 @@ npm outdated
 ✅ Nouvelle syntaxe de templates (plus lisible)
 ✅ Meilleur support SSR & hydration
 ✅ Meilleure DX (Developer Experience) globale
+
+https://angular.fr/get_started/update?utm_source=chatgpt.com
