@@ -1,0 +1,157 @@
+## Récapitulatif des erreurs de migration Angular 15 à 17 (en cours à Angular 16)
+
+---
+
+### 1. `@angular-builders/custom-webpack`
+**Erreur :**
+```
+has an incompatible peer dependency to @angular/compiler-cli (requires "~15.0.0", would install "16.x" ou "17.x")
+```
+**Explication :**
+Ce paquet est encore lié à Angular 15 et n’a pas été mis à jour pour Angular 16 ou 17.
+
+**Résolution :**
+```bash
+npm install @angular-builders/custom-webpack@16 --save-dev
+```
+
+---
+
+### 2. `@angular-devkit/build-angular`
+**Erreur :**
+```
+has an incompatible peer dependency to typescript (requires ">4.9.3 <5.2", would install "5.4.5")
+```
+**Explication :**
+La version actuelle de `@angular-devkit/build-angular` n’est pas compatible avec TypeScript 5.4.
+
+**Résolution :**
+```bash
+npm install @angular-devkit/build-angular@16 --save-dev
+npm install typescript@5.1.6 --save-dev
+```
+
+---
+
+### 3. `@ng-select/ng-select`
+**Erreur :**
+```
+has an incompatible peer dependency to @angular/forms (requires "<16.0.0", would install "17.3.12")
+```
+**Explication :**
+La version de `ng-select` utilisée n’est compatible que jusqu’à Angular 15.
+
+**Résolution :**
+```bash
+npm install @ng-select/ng-select@10 --save
+```
+
+---
+
+### 4. `@angular/common` et `@angular/core`
+**Erreur :**
+```
+requires "^15.2.0", would install "17.3.12"
+```
+**Explication :**
+Une dépendance utilise encore Angular 15 alors que le projet est en 16 ou 17.
+
+**Résolution :**
+Mettre à jour toutes les dépendances Angular à la même version :
+```bash
+npm install @angular/core@17.3.12 @angular/common@17.3.12 \
+             @angular/forms@17.3.12 @angular/router@17.3.12 \
+             @angular/platform-browser@17.3.12 \
+             @angular/platform-browser-dynamic@17.3.12 \
+             @angular/compiler@17.3.12 \
+             @angular/compiler-cli@17.3.12
+```
+
+---
+
+### 5. `@angular/router`
+**Erreur :**
+```
+requires "^15.2.0", would install "17.3.12"
+```
+**Explication :**
+Un paquet utilise encore `@angular/router@15`, ce qui est incompatible avec Angular 17.
+
+**Résolution :**
+1. Identifier la source :
+```bash
+npm ls @angular/router
+```
+
+2. Mettre à jour le paquet concerné :
+```bash
+npm install <le_paquet>@latest
+```
+
+3. Sinon, forcer l'installation :
+```bash
+npm install --force
+# ou
+npm install --legacy-peer-deps
+```
+
+---
+
+### 6. Conflit `@r/fwk-ui@3.0.6` avec Angular 16
+**Erreur :**
+```
+Found: @angular/common@16.2.12
+Could not resolve dependency:
+peer @angular/common@^17.3.12 from @r/fwk-ui@3.0.6
+```
+**Explication :**
+Ton projet est encore en Angular 16, mais la bibliothèque `@r/fwk-ui` requiert Angular 17.
+
+**Solutions :**
+
+#### Option 1 : Mettre à jour vers Angular 17
+```bash
+ng update @angular/cli @angular/core
+```
+Ou en manuel :
+```bash
+npm install @angular/core@17.3.12 @angular/common@17.3.12 \
+             @angular/forms@17.3.12 @angular/router@17.3.12 \
+             @angular/platform-browser@17.3.12 \
+             @angular/platform-browser-dynamic@17.3.12 \
+             @angular/compiler@17.3.12 \
+             @angular/compiler-cli@17.3.12
+```
+
+#### Option 2 : Utiliser une version compatible de `@r/fwk-ui`
+```bash
+npm install @r/fwk-ui@2 --save
+```
+(Remplace "2" par la version compatible avec Angular 16 si disponible)
+
+#### Option 3 : Forcer l'installation (non recommandé en production)
+```bash
+npm install --legacy-peer-deps
+# ou
+npm install --force
+```
+
+---
+
+## 🧹 Nettoyage recommandé
+
+1. Supprimer les anciennes dépendances :
+```bash
+rm -rf node_modules package-lock.json
+```
+
+2. Réinstaller :
+```bash
+npm install
+```
+
+3. Vérifier les mises à jour :
+```bash
+ng update
+```
+
